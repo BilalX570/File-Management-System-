@@ -27,6 +27,101 @@ struct FileNode {
     }
 };
 
+struct FileList {
+    FileNode* head;
+    FileNode* tail;
+    int size;
+
+    FileList() : head(nullptr), tail(nullptr), size(0) {}
+    
+    ~FileList() {
+        clear();
+    }
+
+    bool isEmpty() const {
+        return head == nullptr;
+    }
+
+    int getSize() const {
+        return size;
+    }
+
+    bool contains(const string& filename) const {
+        FileNode* current = head;
+        while (current) {
+            if (current->filename == filename) return true;
+            current = current->next;
+        }
+        return false;
+    }
+
+    void addFileAtBeginning(const string& filename, const string& content) {
+        if (contains(filename)) {
+            cout << "File '" << filename << "' already exists in the list.\n";
+            return;
+        }
+
+        FileNode* newNode = new FileNode(filename, content);
+        
+        if (isEmpty()) {
+            head = tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+    void addFileAtEnd(const string& filename, const string& content) {
+        if (contains(filename)) {
+            cout << "File '" << filename << "' already exists in the list.\n";
+            return;
+        }
+
+        FileNode* newNode = new FileNode(filename, content);
+        
+        if (isEmpty()) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    void addFileAtPosition(const string& filename, int position, const string& content) {
+        if (position < 0 || position > size) {
+            cout << "Invalid position.\n";
+            return;
+        }
+
+        if (position == 0) {
+            addFileAtBeginning(filename, content);
+            return;
+        }
+
+        if (position == size) {
+            addFileAtEnd(filename, content);
+            return;
+        }
+
+        FileNode* newNode = new FileNode(filename, content);
+        
+        FileNode* current = head;
+        for (int i = 0; i < position - 1; i++) {
+            current = current->next;
+        }
+        
+        newNode->next = current->next;
+        newNode->prev = current;
+        current->next->prev = newNode;
+        current->next = newNode;
+        
+        size++;
+    }
+
 
 
 
