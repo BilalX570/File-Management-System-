@@ -4,6 +4,31 @@ using namespace std;
 
 
 
+
+
+struct FileNode {
+    string filename;
+    string content;
+    size_t size;
+    time_t lastModified;
+    
+    FileNode* prev;
+    FileNode* next;
+    
+    FileNode(const string& name, const string& cont = "") : 
+        filename(name), content(cont), prev(nullptr), next(nullptr) {
+        
+        updateFileStats();
+    }
+    
+    void updateFileStats() {
+        size = content.size();
+     
+    }
+};
+
+
+
 void displayMainMenu() {
     cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
     cout << "******************************************************\n";
