@@ -124,6 +124,112 @@ struct FileList {
 
 
 
+    void removeFileFromBeginning() {
+        if (isEmpty()) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        FileNode* temp = head;
+        
+        if (head == tail) {
+            head = tail = nullptr;
+        } else {
+            head = head->next;
+            head->prev = nullptr;
+        }
+        
+        cout << "File '" << temp->filename << "' removed from beginning of list.\n";
+        delete temp;
+        size--;
+    }
+
+    void removeFileFromEnd() {
+        if (isEmpty()) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        FileNode* temp = tail;
+        
+        if (head == tail) {
+            head = tail = nullptr;
+        } else {
+            tail = tail->prev;
+            tail->next = nullptr;
+        }
+        
+        cout << "File '" << temp->filename << "' removed from end of list.\n";
+        delete temp;
+        size--;
+    }
+
+    void removeFileFromPosition(int position) {
+        if (position < 0 || position >= size) {
+            cout << "Invalid position.\n";
+            return;
+        }
+
+        if (position == 0) {
+            removeFileFromBeginning();
+            return;
+        }
+
+        if (position == size - 1) {
+            removeFileFromEnd();
+            return;
+        }
+
+        FileNode* current = head;
+        
+        for (int i = 0; i < position; i++) {
+            current = current->next;
+        }
+        
+        current->prev->next = current->next;
+        current->next->prev = current->prev;
+        
+        cout << "File '" << current->filename << "' removed from position " << position << ".\n";
+        delete current;
+        size--;
+    }
+
+    void removeFile(const string& filename) {
+        if (isEmpty()) {
+            cout << "List is empty.\n";
+            return;
+        }
+
+        if (head->filename == filename) {
+            removeFileFromBeginning();
+            return;
+        }
+
+        if (tail->filename == filename) {
+            removeFileFromEnd();
+            return;
+        }
+
+        FileNode* current = head->next;
+        while (current && current->filename != filename) {
+            current = current->next;
+        }
+
+        if (current) {
+            current->prev->next = current->next;
+            if (current->next) {
+                current->next->prev = current->prev;
+            }
+            cout << "File '" << current->filename << "' removed.\n";
+            delete current;
+            size--;
+        } else {
+            cout << "File '" << filename << "' not found.\n";
+        }
+    }
+
+
+
 
 void displayMainMenu() {
     cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
