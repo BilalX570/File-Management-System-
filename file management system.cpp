@@ -1,10 +1,46 @@
 #include<iostream>
+#include <algorithm>
+#include <map>
+#include <limits>
+
 #include<string>
 using namespace std;
+// File type classification
+enum class FileType {
+    DOCUMENT, IMAGE, AUDIO, VIDEO, ARCHIVE, OTHER
+};
 
+// Mapping of file extensions to their types
+map<string, FileType> fileTypeMap = {
+    {".txt", FileType::DOCUMENT}, {".pdf", FileType::DOCUMENT},
+    {".jpg", FileType::IMAGE}, {".png", FileType::IMAGE},
+    {".mp3", FileType::AUDIO}, {".wav", FileType::AUDIO},
+    {".mp4", FileType::VIDEO}, {".mov", FileType::VIDEO} 
+};
 
+// Determine file type based on extension
+FileType getFileType(const string& filename) {
+    size_t dotPos = filename.find_last_of('.');
+    if (dotPos != string::npos) {
+        string ext = filename.substr(dotPos);
+        transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+        auto it = fileTypeMap.find(ext);
+        if (it != fileTypeMap.end()) return it->second;
+    }
+    return FileType::OTHER;
+}
 
-
+// Convert FileType enum to string for display
+string fileTypeToString(FileType type) {
+    switch(type) {
+        case FileType::DOCUMENT: return "Document";
+        case FileType::IMAGE:    return "Image";
+        case FileType::AUDIO:    return "Audio";
+        case FileType::VIDEO:    return "Video";
+        case FileType::ARCHIVE:  return "Archive";
+        default:                 return "Other";
+    }
+}
 
 struct FileNode {
     string filename;
